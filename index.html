@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lotus Agenda v4</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- The Command Menu Bar (invoked by /) -->
+  <nav id="command-bar" class="hidden">
+    <div class="menu-breadcrumbs" id="menu-breadcrumbs"></div>
+    <ul class="menu-options" id="menu-options"></ul>
+  </nav>
+
+  <!-- Main Application Container -->
+  <div id="app-container">
+    <!-- Left Sidebar: Category Manager (invoked by F9) -->
+    <aside id="category-sidebar" class="hidden" tabindex="-1">
+      <div class="sidebar-header">
+        <h2>Category Manager</h2>
+      </div>
+      <div id="category-tree" class="tree-container">
+        <!-- Tree nodes will be rendered here -->
+      </div>
+    </aside>
+    <div class="resizer hidden" id="resizer-left"></div>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+      <!-- Top header showing View Name -->
+      <header id="view-header">
+        <h1 id="view-title">Main View</h1>
+      </header>
+
+      <!-- The Item Grid -->
+      <div id="grid-container">
+        <table id="agenda-grid">
+          <thead id="grid-head">
+            <tr>
+              <th class="col-header" data-col="item">Item Note / Details</th>
+              <th class="col-header" data-col="assignee">Assignee</th>
+              <th class="col-header" data-col="when">Due Date</th>
+              <th class="col-header" data-col="entry-date">Entry Date</th>
+            </tr>
+          </thead>
+          <thead id="matrix-head" class="hidden">
+          </thead>
+          <tbody id="grid-body">
+            <!-- Grid rows will be rendered here -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Center Modal: F8 View Manager -->
+    <dialog id="view-manager-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>View Manager (F8)</h3>
+          <span class="esc-hint">Esc to Close</span>
+        </div>
+        <div class="modal-body">
+          <ul id="view-list" class="selectable-list">
+            <!-- View items injected dynamically -->
+          </ul>
+          
+          <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border);">
+            <h4 style="margin: 0 0 8px 0; font-size: 0.9em; color: var(--text);">Edit or Create View</h4>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="new-view-name" placeholder="Leave blank to update selected" style="flex: 1; padding: 4px;" />
+              <select id="new-view-layout" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <option value="outliner">Outliner Mode</option>
+                <option value="matrix">Matrix Mode</option>
+              </select>
+              <select id="new-view-section" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <!-- Dynamically populated by view-manager.js -->
+              </select>
+              <select id="new-view-col-section" class="hidden" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <!-- Dynamically populated by view-manager.js -->
+              </select>
+              <button id="btn-create-view" style="padding: 4px 8px; cursor: pointer; background: var(--accent); color: var(--bg); border: none; border-radius: 2px;">Apply/Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Center Modal: F7 Filters -->
+    <dialog id="filter-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>View Filters (F7)</h3>
+          <span class="esc-hint">Esc to Cancel / Enter to Apply</span>
+        </div>
+        <div class="modal-body">
+          <div class="property-form">
+            <div class="property-group">
+              <label>Match Text</label>
+              <input type="text" id="filter-text" tabindex="1" placeholder="e.g. 'budget'" />
+            </div>
+            <div class="property-group">
+              <label>Assignee</label>
+              <input type="text" id="filter-assignee" tabindex="2" placeholder="e.g. 'John'" />
+            </div>
+            <div class="property-group checkbox-group">
+              <input type="checkbox" id="filter-show-done" tabindex="3" />
+              <label for="filter-show-done">Show Done/Completed Items</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Right Sidebar: F6 Properties / F5 Notes -->
+    <div class="resizer hidden" id="resizer-right"></div>
+    <aside id="properties-panel" class="hidden">
+      <div class="panel-header">
+        <h3 id="panel-title">Properties</h3>
+      </div>
+      <div class="panel-content" id="panel-content">
+        <!-- Dynamic content based on F-key -->
+      </div>
+    </aside>
+  </div>
+
+  <footer id="fkey-toolbar">
+    <button class="fkey-btn" title="Edit the active cell inline" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F2'}))">F2 Edit</button>
+    <button class="fkey-btn" title="Cut the active item and its children" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F3'}))">F3 Cut</button>
+    <button class="fkey-btn" title="Paste the copied items below the active row" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F4'}))">F4 Paste</button>
+    <button class="fkey-btn" title="Open the Note Editor for the active item" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F5'}))">F5 Note</button>
+    <button class="fkey-btn" title="View or edit properties of the active item" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F6'}))">F6 Props</button>
+    <button class="fkey-btn" title="Filter the view by specific conditions" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F7'}))">F7 Filter</button>
+    <button class="fkey-btn" title="Switch to a different View" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F8'}))">F8 View</button>
+    <button class="fkey-btn" title="Open the Category Manager" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F9'}))">F9 Categories</button>
+    <button class="fkey-btn" title="Open the Context Menu" onclick="event.stopPropagation(); window.dispatchEvent(new KeyboardEvent('keydown', {key: 'F10'}))">F10 Menu</button>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="state.js"></script>
+  <script src="matcher.js"></script>
+  <script src="database.js"></script>
+  <script src="markdown-parser.js"></script>
+  <script src="matrix-view.js"></script>
+  <script src="menu.js"></script>
+  <script src="properties.js"></script>
+  <script src="view-manager.js"></script>
+  <script src="filters.js"></script>
+  <script src="fkeys.js"></script>
+  <script src="grid.js"></script>
+  <script src="category.js"></script>
+  <script src="app.js"></script>
+  <script src="test-fkeys.js"></script>
+  <script src="resizer.js"></script>
+</body>
+</html>

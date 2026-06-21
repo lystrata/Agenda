@@ -1,0 +1,20 @@
+{
+  "name": "lotus-agenda-v4",
+  "version": "2.0.0",
+  "description": "Lotus Agenda v4 - UI First Architecture",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "playwright test",
+    "package": "electron-packager . \"Lotus Agenda\" --platform=darwin --arch=arm64 --out=dist/ --overwrite"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "electron": "^29.1.1",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "chrono-node": "^2.9.1",
+    "playwright": "^1.60.0"
+  }
+}
