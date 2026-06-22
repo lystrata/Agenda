@@ -408,6 +408,17 @@ dialog.modal::backdrop {
   outline-offset: -2px;
   background: var(--bg-hover);
 }
+.section-group {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+.section-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
 
 .section-header-row .grid-cell {
   background-color: var(--accent);

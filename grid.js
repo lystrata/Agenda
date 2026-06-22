@@ -392,12 +392,18 @@ function renderGrid() {
   }
   if (window.App.activeRowIndex < 0) window.App.activeRowIndex = 0;
   
+  let currentSectionGroup = null;
+  
   visibleRows.forEach((item, visibleIdx) => {
     const tr = document.createElement('div');
     tr.className = 'grid-row';
     tr.dataset.visibleIdx = visibleIdx;
     
     if (item.isSectionHeader) {
+      currentSectionGroup = document.createElement('div');
+      currentSectionGroup.className = 'section-group';
+      gridBody.appendChild(currentSectionGroup);
+      
       tr.dataset.section = item.categoryId;
       tr.classList.add('section-header-row');
       
@@ -426,7 +432,7 @@ function renderGrid() {
       }
       
       tr.appendChild(td);
-      gridBody.appendChild(tr);
+      currentSectionGroup.appendChild(tr);
       return;
     }
     
@@ -487,8 +493,11 @@ function renderGrid() {
       
       tr.appendChild(td);
     });
-    
-    gridBody.appendChild(tr);
+    if (currentSectionGroup) {
+      currentSectionGroup.appendChild(tr);
+    } else {
+      gridBody.appendChild(tr);
+    }
   });
 }
 
