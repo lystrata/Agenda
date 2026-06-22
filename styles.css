@@ -495,3 +495,71 @@ dialog.modal::backdrop {
   margin-bottom: 4px;
   color: var(--text-main);
 }
+
+/* Long Note Truncation */
+.item-text-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.read-more-badge {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(0, 122, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  border: 1px solid rgba(0, 122, 255, 0.2);
+}
+
+.read-more-badge:hover {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+/* Glass Modal */
+.glass-modal::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-modal {
+  background: var(--bg-panel);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--text-highlight);
+}
+
+.markdown-body p {
+  margin-bottom: 12px;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+  color: var(--text);
+  opacity: 0.8;
+  margin: 0 0 16px 0;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.markdown-body ul {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.markdown-body li {
+  margin-bottom: 6px;
+}

@@ -60,8 +60,51 @@ function parseMarkdownLine(text) {
   html = html.replace(/_([^_]+)_/g, '<i>$1</i>');
   // Strikethrough: ~~text~~
   html = html.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+  
   return html;
 }
+
+window.App = window.App || {};
+
+window.App.parseFullMarkdown = function(text) {
+  if (typeof AgendaMarkdownParser !== 'undefined' && AgendaMarkdownParser.renderToHtml) {
+    return AgendaMarkdownParser.renderToHtml(text);
+  }
+  // Fallback to basic parse
+  return text.split('\n').map(line => parseMarkdownLine(line)).join('<br>');
+};
+
+window.App.openMarkdownModal = function(row) {
+  const modal = document.getElementById('markdown-viewer-modal');
+  const title = document.getElementById('markdown-viewer-title');
+  const body = document.getElementById('markdown-viewer-body');
+  
+  if (!modal || !body) return;
+  
+  title.textContent = row.text;
+  
+  let fullText = row.text;
+  if (row.notes && row.notes.text) fullText += '\n\n' + row.notes.text;
+  
+  body.innerHTML = window.App.parseFullMarkdown(fullText);
+  modal.showModal();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnClose = document.getElementById('btn-close-markdown');
+  const modal = document.getElementById('markdown-viewer-modal');
+  if (btnClose && modal) {
+    btnClose.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (e) => {
+      const rect = modal.getBoundingClientRect();
+      const isInDialog = (rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX && e.clientX <= rect.left + rect.width);
+      if (!isInDialog) {
+        modal.close();
+      }
+    });
+  }
+});
 
 window.cutActiveRow = function() {
   if (window.App.db.items.length === 0) return;
@@ -478,11 +521,37 @@ function renderGrid() {
           iconSpan.textContent = '• ';
         }
         
+        const contentContainer = document.createElement('div');
+        contentContainer.style.display = 'inline-flex';
+        contentContainer.style.flexDirection = 'column';
+        contentContainer.style.verticalAlign = 'top';
+        contentContainer.style.width = `calc(100% - 20px)`;
+        
         const textSpan = document.createElement('span');
-        textSpan.innerHTML = parseMarkdownLine(cell.val);
+        textSpan.className = 'item-text-content';
+        let fullText = cell.val;
+        if (row.notes && row.notes.text) fullText += '\n\n' + row.notes.text;
+        textSpan.innerHTML = window.App.parseFullMarkdown ? window.App.parseFullMarkdown(fullText) : parseMarkdownLine(fullText);
+        
+        contentContainer.appendChild(textSpan);
+        
+        // Add Read More badge if text is long
+        if (fullText.length > 150 || fullText.includes('\n')) {
+          const badge = document.createElement('span');
+          badge.className = 'read-more-badge';
+          badge.textContent = 'Read More';
+          badge.onclick = (e) => {
+            e.stopPropagation();
+            window.App.activeRowIndex = visibleIdx;
+            activeColIndex = 0;
+            renderGrid();
+            window.App.openMarkdownModal(row);
+          };
+          contentContainer.appendChild(badge);
+        }
         
         td.appendChild(iconSpan);
-        td.appendChild(textSpan);
+        td.appendChild(contentContainer);
       } else {
         td.innerHTML = parseMarkdownLine(cell.val);
       }

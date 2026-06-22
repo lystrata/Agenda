@@ -115,6 +115,21 @@
       </div>
     </dialog>
 
+    <!-- Markdown Viewer Modal -->
+    <dialog id="markdown-viewer-modal" class="modal glass-modal">
+      <div class="modal-content markdown-content-wrapper" style="width: 600px; max-width: 90vw;">
+        <div class="modal-header">
+          <h3 id="markdown-viewer-title" style="margin:0;">Detailed Description</h3>
+        </div>
+        <div class="modal-body markdown-body" id="markdown-viewer-body" style="max-height: 60vh; overflow-y: auto; padding: 20px; line-height: 1.5; font-size: 14px;">
+          <!-- Rendered markdown goes here -->
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; padding: 12px; border-top: 1px solid var(--border);">
+          <button id="btn-close-markdown" style="padding: 6px 12px; background: var(--accent); color: var(--bg); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Close Details</button>
+        </div>
+      </div>
+    </dialog>
+
     <!-- Right Sidebar: F6 Properties / F5 Notes -->
     <div class="resizer hidden" id="resizer-right"></div>
     <aside id="properties-panel" class="hidden">

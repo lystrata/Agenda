@@ -318,6 +318,76 @@ class AgendaMarkdownParser {
       }
     }
   }
+
+  /**
+   * Renders raw markdown text into full HTML with block elements.
+   * Supports Headings, Lists, Blockquotes, Bold, and Italic.
+   * @param {string} text 
+   * @returns {string} HTML
+   */
+  static renderToHtml(text) {
+    if (!text) return '';
+    
+    let lines = text.split(/\r?\n/);
+    let html = '';
+    let inList = false;
+    
+    // Helper to parse inline styles (bold, italic)
+    const parseInline = (line) => {
+      let l = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      l = l.replace(/\*\*([^\*]+)\*\*/g, '<b>$1</b>').replace(/__([^_]+)__/g, '<b>$1</b>');
+      l = l.replace(/\*([^\*]+)\*/g, '<i>$1</i>').replace(/_([^_]+)_/g, '<i>$1</i>');
+      return l;
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      
+      // Close list if line is empty or not a list item
+      const isListItem = line.match(/^[\-\*]\s+(.*)/);
+      if (inList && (!isListItem)) {
+        html += '</ul>\n';
+        inList = false;
+      }
+      
+      if (!line) {
+        // Blank line -> skip or add <br> if we want, but typically paragraphs handle spacing
+        continue;
+      }
+      
+      // Headings
+      let hMatch = line.match(/^(#{1,6})\s+(.*)/);
+      if (hMatch) {
+        const level = hMatch[1].length;
+        html += `<h${level}>${parseInline(hMatch[2])}</h${level}>\n`;
+        continue;
+      }
+      
+      // Blockquotes
+      let bqMatch = line.match(/^>\s+(.*)/);
+      if (bqMatch) {
+        html += `<blockquote>${parseInline(bqMatch[1])}</blockquote>\n`;
+        continue;
+      }
+      
+      // Lists
+      if (isListItem) {
+        if (!inList) {
+          html += '<ul>\n';
+          inList = true;
+        }
+        html += `<li>${parseInline(isListItem[1])}</li>\n`;
+        continue;
+      }
+      
+      // Paragraph
+      html += `<p>${parseInline(line)}</p>\n`;
+    }
+    
+    if (inList) html += '</ul>\n';
+    
+    return html;
+  }
 }
 
 // Export for Node.js environments (like Playwright tests)

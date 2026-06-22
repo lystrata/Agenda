@@ -93,7 +93,7 @@ window.addEventListener('keydown', (e) => {
         break;
       case 'F6':
         // Toggle Object Properties
-        if (!propertiesPanel.classList.contains('hidden') && (panelTitle.textContent === "Object Properties (F6)" || panelTitle.textContent === "Category Properties (F6)")) {
+        if (!propertiesPanel.classList.contains('hidden') && panelTitle.textContent.includes('Properties')) {
           propertiesPanel.classList.add('hidden');
           document.getElementById('resizer-right')?.classList.add('hidden');
           document.getElementById('grid-container').focus();
@@ -143,6 +143,14 @@ window.addEventListener('keydown', (e) => {
           App.openCommandMenu();
         }
         break;
+    }
+  } else if (e.altKey && e.code === 'Space') {
+    e.preventDefault();
+    if (typeof getVisibleRows === 'function' && typeof window.App.openMarkdownModal === 'function') {
+      const rows = getVisibleRows();
+      if (rows && rows[window.App.activeRowIndex]) {
+        window.App.openMarkdownModal(rows[window.App.activeRowIndex]);
+      }
     }
   }
 });
