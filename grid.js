@@ -483,7 +483,7 @@ gridBody.addEventListener('click', (e) => {
   // Check if click was on a collapse icon
   if (e.target.classList.contains('section-collapse-icon')) {
     e.stopPropagation();
-    const tr = e.target.closest('tr');
+    const tr = e.target.closest('.grid-row');
     window.App.activeRowIndex = parseInt(tr.dataset.visibleIdx, 10);
     activeColIndex = 0;
     
@@ -495,8 +495,8 @@ gridBody.addEventListener('click', (e) => {
   
   if (e.target.classList.contains('item-collapse-icon')) {
     e.stopPropagation();
-    const tr = e.target.closest('tr');
-    const td = e.target.closest('td');
+    const tr = e.target.closest('.grid-row');
+    const td = e.target.closest('.grid-cell');
     window.App.activeRowIndex = parseInt(tr.dataset.visibleIdx, 10);
     activeColIndex = parseInt(td.dataset.col, 10);
     
@@ -509,10 +509,10 @@ gridBody.addEventListener('click', (e) => {
     return;
   }
   
-  // Normal cell click
-  const td = e.target.closest('td');
+  // Update active cell on click
+  const td = e.target.closest('.grid-cell');
   if (!td) return;
-  const tr = td.closest('tr');
+  const tr = td.closest('.grid-row');
   if (!tr) return;
   
   window.App.activeRowIndex = parseInt(tr.dataset.visibleIdx, 10);
@@ -523,7 +523,7 @@ gridBody.addEventListener('click', (e) => {
 document.getElementById('grid-container').addEventListener('dblclick', (e) => {
   // Only trigger if clicked explicitly on the container or table wrapper (empty space)
   // Ignore clicks inside the table header (TH) or table body cells (TD)
-  if (e.target.tagName === 'TH' || e.target.closest('th') || e.target.closest('td')) return;
+  if (e.target.classList.contains('header-cell') || e.target.closest('.header-cell') || e.target.closest('.grid-cell')) return;
   
   // Double clicked on empty space, create a new item
   window.App.db.addItem('', 0, []);
@@ -535,9 +535,9 @@ document.getElementById('grid-container').addEventListener('dblclick', (e) => {
       window.App.activeRowIndex = newRowIndex;
       activeColIndex = 0;
       
-      const newTr = gridBody.querySelector(`tr[data-visible-idx="${newRowIndex}"]`);
+      const newTr = gridBody.querySelector(`div[data-visible-idx="${newRowIndex}"]`);
       if (newTr) {
-        const newTd = newTr.querySelector('td[data-col="0"]');
+        const newTd = newTr.querySelector('.grid-cell[data-col="0"]');
         if (newTd) {
           triggerInlineEdit(window.App.db.items.length - 1, 0, newTd, 'text', 0);
         }
@@ -545,11 +545,12 @@ document.getElementById('grid-container').addEventListener('dblclick', (e) => {
     }
 });
 
+// Inline Edit on Double Click
 gridBody.addEventListener('dblclick', (e) => {
-  const td = e.target.closest('td');
+  const td = e.target.closest('.grid-cell');
   if (!td || td.querySelector('input')) return;
   
-  const tr = td.closest('tr');
+  const tr = td.closest('.grid-row');
   if (!tr || tr.classList.contains('section-header-row')) return;
   
   window.App.activeRowIndex = parseInt(tr.dataset.visibleIdx, 10);
