@@ -120,6 +120,17 @@ window.renderMatrixView = function() {
     }
     
     matrixHead.appendChild(headerRow);
+    
+    // Dynamically update agenda-grid columns to match Matrix View
+    const agendaGrid = document.getElementById('agenda-grid');
+    if (agendaGrid) {
+      const numCols = colCats.length > 0 ? colCats.length + 2 : 2;
+      let gridCols = [];
+      for (let i = 0; i < numCols; i++) {
+        gridCols.push(existingWidths[i] ? existingWidths[i] : 'minmax(150px, 1fr)');
+      }
+      agendaGrid.style.gridTemplateColumns = gridCols.join(' ');
+    }
   }
   
   // Rebuild Table Body

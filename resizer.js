@@ -79,4 +79,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupResizer(resizerLeft, categorySidebar, true);
   setupResizer(resizerRight, propertiesPanel, false);
+
+  // Column Resizer Logic for native CSS resize: horizontal
+  const colResizeObserver = new ResizeObserver(() => {
+    const agendaGrid = document.getElementById('agenda-grid');
+    if (!agendaGrid) return;
+
+    const gridHead = document.getElementById('grid-head');
+    const matrixHead = document.getElementById('matrix-head');
+    const activeHead = (matrixHead && !matrixHead.classList.contains('hidden')) ? matrixHead : gridHead;
+    
+    if (!activeHead) return;
+    
+    const headers = activeHead.querySelectorAll('.col-header');
+    if (headers.length === 0) return;
+    
+    let newCols = [];
+    let hasCustomWidth = false;
+    
+    headers.forEach((th, i) => {
+      if (th.style.width) {
+        newCols.push(th.style.width);
+        hasCustomWidth = true;
+      } else {
+        if (activeHead === gridHead) {
+          newCols.push(i === 0 ? 'minmax(200px, 4fr)' : 'minmax(100px, 2fr)');
+        } else {
+          newCols.push('minmax(150px, 1fr)');
+        }
+      }
+    });
+    
+    // Only override gridTemplateColumns if at least one header was manually resized
+    if (hasCustomWidth || activeHead === matrixHead) {
+      agendaGrid.style.gridTemplateColumns = newCols.join(' ');
+    } else {
+      // Revert to CSS default
+      agendaGrid.style.gridTemplateColumns = '';
+    }
+  });
+
+  // Since headers can be dynamically regenerated, we need a MutationObserver to attach the ResizeObserver
+  const gridHeadObserver = new MutationObserver(() => {
+    document.querySelectorAll('.col-header').forEach(th => {
+      colResizeObserver.observe(th);
+    });
+  });
+  
+  const gridHead = document.getElementById('grid-head');
+  const matrixHead = document.getElementById('matrix-head');
+  if (gridHead) gridHeadObserver.observe(gridHead, { childList: true, subtree: true });
+  if (matrixHead) gridHeadObserver.observe(matrixHead, { childList: true, subtree: true });
+  
+  // Initial attach
+  document.querySelectorAll('.col-header').forEach(th => colResizeObserver.observe(th));
 });
