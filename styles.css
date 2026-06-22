@@ -360,16 +360,23 @@ dialog.modal::backdrop {
   overflow-wrap: break-word;
 }
 
+.header-row {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: 32px;
+  box-sizing: border-box;
+}
+
 .col-header {
   background-color: var(--bg-panel);
   font-weight: 600;
   user-select: none;
-  position: sticky;
-  top: 0;
-  z-index: 10;
   resize: horizontal;
   overflow: hidden;
   min-width: 50px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 /* Matrix View Specific Styles */
@@ -416,7 +423,7 @@ dialog.modal::backdrop {
 
 .section-header-row {
   position: sticky;
-  top: 0;
+  top: 32px; /* Sticks right below the 32px tall .header-row */
   z-index: 20;
 }
 
