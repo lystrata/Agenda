@@ -68,21 +68,21 @@
             <h4 style="margin: 0 0 8px 0; font-size: 0.9em; color: var(--text);">Edit or Create View</h4>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div style="display: flex; gap: 8px;">
-                <input type="text" id="new-view-name" placeholder="Leave blank to update selected" style="flex: 1; padding: 4px;" />
-                <select id="new-view-layout" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <input type="text" id="new-view-name" placeholder="Leave blank to update selected" style="flex: 1; padding: 4px; min-width: 0; box-sizing: border-box;" />
+                <select id="new-view-layout" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border); box-sizing: border-box;">
                   <option value="outliner">Outliner Mode</option>
                   <option value="matrix">Matrix Mode</option>
                 </select>
               </div>
               <div style="display: flex; gap: 8px;">
-                <select id="new-view-section" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <select id="new-view-section" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border); min-width: 0; box-sizing: border-box;">
                   <!-- Dynamically populated by view-manager.js -->
                 </select>
-                <select id="new-view-col-section" class="hidden" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                <select id="new-view-col-section" class="hidden" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border); min-width: 0; box-sizing: border-box;">
                   <!-- Dynamically populated by view-manager.js -->
                 </select>
-                <button id="btn-create-view" style="padding: 4px 12px; cursor: pointer; background: var(--accent); color: var(--bg); border: none; border-radius: 2px; white-space: nowrap;">Apply/Add</button>
               </div>
+              <button id="btn-create-view" style="width: 100%; padding: 6px; cursor: pointer; background: var(--accent); color: var(--bg); border: none; border-radius: 2px; font-weight: bold; box-sizing: border-box;">Apply/Add</button>
             </div>
           </div>
         </div>
