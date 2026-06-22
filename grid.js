@@ -170,7 +170,21 @@ function getVisibleRows() {
     
     // 2. Text filter
     if (passesFilter && filters.text) {
-      if (!row.text.toLowerCase().includes(filters.text)) {
+      const matchText = filters.text.toLowerCase();
+      let hasMatch = row.text.toLowerCase().includes(matchText);
+      
+      // Also match against assigned category names
+      if (!hasMatch && row.categoryIds && row.categoryIds.length > 0) {
+        for (const catId of row.categoryIds) {
+          const cat = window.App.db.categories[catId];
+          if (cat && cat.name.toLowerCase().includes(matchText)) {
+            hasMatch = true;
+            break;
+          }
+        }
+      }
+      
+      if (!hasMatch) {
         passesFilter = false;
       }
     }
