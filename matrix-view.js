@@ -18,7 +18,21 @@ window.renderMatrixView = function() {
     let passesFilter = true;
     if (filters.showDone === false && item.done) passesFilter = false;
     
-    if (passesFilter && filters.text && !item.text.toLowerCase().includes(filters.text)) passesFilter = false;
+    if (passesFilter && filters.text) {
+      const matchText = filters.text.toLowerCase();
+      let hasMatch = item.text.toLowerCase().includes(matchText);
+      
+      if (!hasMatch && item.assignments && item.assignments.size > 0) {
+        for (const catId of item.assignments) {
+          const cat = window.App.db.categories[catId];
+          if (cat && cat.name.toLowerCase().includes(matchText)) {
+            hasMatch = true;
+            break;
+          }
+        }
+      }
+      if (!hasMatch) passesFilter = false;
+    }
     
     if (passesFilter && filters.assignee) {
       const assigneeName = window.App.db.getCategoryAssignmentName(item, 'root-who') || '';

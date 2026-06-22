@@ -174,8 +174,8 @@ function getVisibleRows() {
       let hasMatch = row.text.toLowerCase().includes(matchText);
       
       // Also match against assigned category names
-      if (!hasMatch && row.categoryIds && row.categoryIds.length > 0) {
-        for (const catId of row.categoryIds) {
+      if (!hasMatch && row.assignments && row.assignments.size > 0) {
+        for (const catId of row.assignments) {
           const cat = window.App.db.categories[catId];
           if (cat && cat.name.toLowerCase().includes(matchText)) {
             hasMatch = true;
