@@ -572,9 +572,9 @@ function updateFocus() {
   const visibleRows = getVisibleRows();
   if (window.App.activeRowIndex >= 0 && window.App.activeRowIndex < visibleRows.length) {
     const actualIndex = visibleRows[window.App.activeRowIndex].index;
-    const tr = gridBody.querySelector(`tr[data-index="${actualIndex}"]`);
+    const tr = gridBody.querySelector(`div.grid-row[data-index="${actualIndex}"]`);
     if (tr) {
-      const td = tr.querySelectorAll('td')[activeColIndex];
+      const td = tr.querySelectorAll('.grid-cell')[activeColIndex];
       if (td) td.classList.add('active-cell');
     }
   }
