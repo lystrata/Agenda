@@ -571,10 +571,11 @@ function updateFocus() {
   // Find new active cell
   const visibleRows = getVisibleRows();
   if (window.App.activeRowIndex >= 0 && window.App.activeRowIndex < visibleRows.length) {
-    const actualIndex = visibleRows[window.App.activeRowIndex].index;
-    const tr = gridBody.querySelector(`div.grid-row[data-index="${actualIndex}"]`);
+    const tr = gridBody.querySelector(`div.grid-row[data-visible-idx="${window.App.activeRowIndex}"]`);
     if (tr) {
-      const td = tr.querySelectorAll('.grid-cell')[activeColIndex];
+      const tdList = tr.querySelectorAll('.grid-cell');
+      // Section headers only have 1 cell, normal rows have multiple
+      const td = tdList.length > activeColIndex ? tdList[activeColIndex] : tdList[0];
       if (td) td.classList.add('active-cell');
     }
   }
