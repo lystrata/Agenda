@@ -46,11 +46,11 @@ const menuOptionsList = document.getElementById('menu-options');
 
 function renderMenu() {
   if (!commandModeActive) {
-    commandBar.classList.add('hidden');
+    commandBar.hidePopover();
     return;
   }
   
-  commandBar.classList.remove('hidden');
+  commandBar.showPopover();
   
   // Breadcrumbs
   menuBreadcrumbs.textContent = '/' + currentMenuPath.map(m => m.name).join(' > ');
@@ -87,13 +87,6 @@ function renderMenu() {
     menuOptionsList.appendChild(li);
   });
 }
-
-// Click outside menu to close
-document.addEventListener('click', (e) => {
-  if (commandModeActive && !commandBar.contains(e.target)) {
-    exitCommandMode();
-  }
-});
 
 // Initialize Theme
 document.addEventListener('DOMContentLoaded', () => {
@@ -233,6 +226,7 @@ async function executeAction(action) {
 }
 
 function exitCommandMode() {
+  if (!commandModeActive) return;
   commandModeActive = false;
   currentMenuPath = [];
   currentSubmenu = null;
@@ -242,6 +236,12 @@ function exitCommandMode() {
   const gridContainer = document.getElementById('grid-container');
   if (gridContainer) gridContainer.focus();
 }
+
+commandBar.addEventListener('beforetoggle', (e) => {
+  if (e.newState === 'closed' && commandModeActive) {
+    exitCommandMode();
+  }
+});
 
 App.openCommandMenu = function() {
   if (commandModeActive) return;

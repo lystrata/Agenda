@@ -7,7 +7,7 @@
 </head>
 <body>
   <!-- The Command Menu Bar (invoked by /) -->
-  <nav id="command-bar" class="hidden">
+  <nav id="command-bar" popover="auto">
     <div class="menu-breadcrumbs" id="menu-breadcrumbs"></div>
     <ul class="menu-options" id="menu-options"></ul>
   </nav>
@@ -34,21 +34,21 @@
 
       <!-- The Item Grid -->
       <div id="grid-container">
-        <table id="agenda-grid">
-          <thead id="grid-head">
-            <tr>
-              <th class="col-header" data-col="item">Item Note / Details</th>
-              <th class="col-header" data-col="assignee">Assignee</th>
-              <th class="col-header" data-col="when">Due Date</th>
-              <th class="col-header" data-col="entry-date">Entry Date</th>
-            </tr>
-          </thead>
-          <thead id="matrix-head" class="hidden">
-          </thead>
-          <tbody id="grid-body">
+        <div id="agenda-grid" class="agenda-grid">
+          <div id="grid-head" class="grid-head">
+            <div class="grid-row header-row">
+              <div class="col-header" data-col="item">Item Note / Details</div>
+              <div class="col-header" data-col="assignee">Assignee</div>
+              <div class="col-header" data-col="when">Due Date</div>
+              <div class="col-header" data-col="entry-date">Entry Date</div>
+            </div>
+          </div>
+          <div id="matrix-head" class="grid-head hidden">
+          </div>
+          <div id="grid-body" class="grid-body">
             <!-- Grid rows will be rendered here -->
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -66,19 +66,23 @@
           
           <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border);">
             <h4 style="margin: 0 0 8px 0; font-size: 0.9em; color: var(--text);">Edit or Create View</h4>
-            <div style="display: flex; gap: 8px;">
-              <input type="text" id="new-view-name" placeholder="Leave blank to update selected" style="flex: 1; padding: 4px;" />
-              <select id="new-view-layout" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
-                <option value="outliner">Outliner Mode</option>
-                <option value="matrix">Matrix Mode</option>
-              </select>
-              <select id="new-view-section" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
-                <!-- Dynamically populated by view-manager.js -->
-              </select>
-              <select id="new-view-col-section" class="hidden" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
-                <!-- Dynamically populated by view-manager.js -->
-              </select>
-              <button id="btn-create-view" style="padding: 4px 8px; cursor: pointer; background: var(--accent); color: var(--bg); border: none; border-radius: 2px;">Apply/Add</button>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="new-view-name" placeholder="Leave blank to update selected" style="flex: 1; padding: 4px;" />
+                <select id="new-view-layout" style="padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                  <option value="outliner">Outliner Mode</option>
+                  <option value="matrix">Matrix Mode</option>
+                </select>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <select id="new-view-section" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                  <!-- Dynamically populated by view-manager.js -->
+                </select>
+                <select id="new-view-col-section" class="hidden" style="flex: 1; padding: 4px; background: var(--bg); color: var(--text); border: 1px solid var(--border);">
+                  <!-- Dynamically populated by view-manager.js -->
+                </select>
+                <button id="btn-create-view" style="padding: 4px 12px; cursor: pointer; background: var(--accent); color: var(--bg); border: none; border-radius: 2px; white-space: nowrap;">Apply/Add</button>
+              </div>
             </div>
           </div>
         </div>

@@ -243,9 +243,9 @@ window.triggerGridEdit = function() {
   const visibleRows = getVisibleRows();
   const actualIndex = visibleRows[window.App.activeRowIndex].index;
   
-  const tr = gridBody.querySelector(`tr[data-index="${actualIndex}"]`);
+  const tr = gridBody.querySelector(`.grid-row[data-index="${actualIndex}"]`);
   if (!tr) return;
-  const td = tr.querySelectorAll('td')[activeColIndex];
+  const td = tr.querySelectorAll('.grid-cell')[activeColIndex];
   const cellKeys = ['text', 'assignee', 'due', 'entry'];
   const key = cellKeys[activeColIndex];
   
@@ -379,15 +379,17 @@ function renderGrid() {
   if (window.App.activeRowIndex < 0) window.App.activeRowIndex = 0;
   
   visibleRows.forEach((item, visibleIdx) => {
-    const tr = document.createElement('tr');
+    const tr = document.createElement('div');
+    tr.className = 'grid-row';
     tr.dataset.visibleIdx = visibleIdx;
     
     if (item.isSectionHeader) {
       tr.dataset.section = item.categoryId;
       tr.classList.add('section-header-row');
       
-      const td = document.createElement('td');
-      td.colSpan = 4;
+      const td = document.createElement('div');
+      td.className = 'grid-cell';
+      td.style.gridColumn = '1 / -1';
       td.dataset.col = "0";
       
       const iconSpan = document.createElement('span');
@@ -432,7 +434,8 @@ function renderGrid() {
     ];
     
     cells.forEach((cell, colIndex) => {
-      const td = document.createElement('td');
+      const td = document.createElement('div');
+      td.className = 'grid-cell';
       td.dataset.col = colIndex;
       td.dataset.key = cell.key;
       

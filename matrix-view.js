@@ -62,10 +62,11 @@ window.renderMatrixView = function() {
   if (matrixHead) {
     // Save existing widths to preserve them during re-renders (like filtering)
     const existingWidths = [];
-    matrixHead.querySelectorAll('th').forEach(th => existingWidths.push(th.style.width));
+    matrixHead.querySelectorAll('.col-header').forEach(th => existingWidths.push(th.style.width));
 
     matrixHead.innerHTML = '';
-    const headerRow = document.createElement('tr');
+    const headerRow = document.createElement('div');
+    headerRow.className = 'grid-row header-row';
     
     let thIndex = 0;
     const applyWidth = (th) => {
@@ -73,21 +74,21 @@ window.renderMatrixView = function() {
       thIndex++;
     };
     
-    const thRowLabel = document.createElement('th');
+    const thRowLabel = document.createElement('div');
     thRowLabel.className = 'col-header';
     thRowLabel.textContent = rowParentId ? window.App.db.categories[rowParentId].name : 'Group';
     applyWidth(thRowLabel);
     headerRow.appendChild(thRowLabel);
     
     if (colCats.length === 0) {
-      const thAll = document.createElement('th');
+      const thAll = document.createElement('div');
       thAll.className = 'col-header';
       thAll.textContent = 'Items';
       applyWidth(thAll);
       headerRow.appendChild(thAll);
     } else {
       colCats.forEach(cat => {
-        const th = document.createElement('th');
+        const th = document.createElement('div');
         th.className = 'col-header';
         th.textContent = cat.name;
         applyWidth(th);
@@ -97,7 +98,7 @@ window.renderMatrixView = function() {
     
     // Also add an Unassigned column if there are column categories
     if (colCats.length > 0) {
-      const thUnassigned = document.createElement('th');
+      const thUnassigned = document.createElement('div');
       thUnassigned.className = 'col-header';
       thUnassigned.textContent = '(Unassigned Col)';
       applyWidth(thUnassigned);
@@ -148,17 +149,18 @@ window.renderMatrixView = function() {
   // Render Rows
   const renderMatrixRow = (rowCatId, rowName) => {
     const rowMap = matrix.get(rowCatId) || new Map();
-    const tr = document.createElement('tr');
+    const tr = document.createElement('div');
+    tr.className = 'grid-row';
     tr.dataset.matrixRow = rowCatId;
     
-    const tdLabel = document.createElement('td');
+    const tdLabel = document.createElement('div');
+    tdLabel.className = 'grid-cell';
     tdLabel.innerHTML = `<strong>${rowName}</strong>`;
     tr.appendChild(tdLabel);
     
     const renderCell = (colCatId) => {
-      const td = document.createElement('td');
-      td.className = 'matrix-cell';
-      td.style.verticalAlign = 'top';
+      const td = document.createElement('div');
+      td.className = 'grid-cell matrix-cell';
       const items = rowMap.get(colCatId) || [];
       
       if (items.length === 0) {
