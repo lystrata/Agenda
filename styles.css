@@ -424,9 +424,8 @@ dialog.modal::backdrop {
 }
 
 .section-header-row .active-cell {
-  outline: 2px solid var(--text);
-  outline-offset: -2px;
-  background-color: var(--accent);
+  outline: 2px solid var(--bg);
+  background-color: var(--text);
   color: var(--bg);
 }
 
