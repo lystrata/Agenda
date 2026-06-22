@@ -78,15 +78,36 @@ window.App.openMarkdownModal = function(row) {
   const modal = document.getElementById('markdown-viewer-modal');
   const title = document.getElementById('markdown-viewer-title');
   const body = document.getElementById('markdown-viewer-body');
+  const btnToggle = document.getElementById('btn-toggle-raw');
   
   if (!modal || !body) return;
   
-  title.textContent = row.text;
+  title.textContent = "Detailed Description"; // Reset to generic title
   
   let fullText = row.text;
   if (row.notes && row.notes.text) fullText += '\n\n' + row.notes.text;
   
-  body.innerHTML = window.App.parseFullMarkdown(fullText);
+  let isRawMode = false;
+  const formattedHtml = window.App.parseFullMarkdown(fullText);
+  const rawHtml = `<pre style="white-space: pre-wrap; font-family: monospace; background: var(--bg-panel); padding: 10px; border-radius: 4px; color: var(--text-muted);">${fullText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;
+  
+  body.innerHTML = formattedHtml;
+  
+  if (btnToggle) {
+    btnToggle.textContent = 'View Raw';
+    btnToggle.onclick = (e) => {
+      e.stopPropagation();
+      isRawMode = !isRawMode;
+      if (isRawMode) {
+        body.innerHTML = rawHtml;
+        btnToggle.textContent = 'View Formatted';
+      } else {
+        body.innerHTML = formattedHtml;
+        btnToggle.textContent = 'View Raw';
+      }
+    };
+  }
+  
   modal.showModal();
 };
 
