@@ -183,9 +183,37 @@ window.renderMatrixView = function() {
         const ul = document.createElement('ul');
         items.forEach(it => {
           const li = document.createElement('li');
-          // Cleanly display the item text
-          const safeText = (it.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          li.innerHTML = `${safeText}`;
+          
+          const contentContainer = document.createElement('div');
+          contentContainer.style.display = 'inline-flex';
+          contentContainer.style.flexDirection = 'column';
+          contentContainer.style.verticalAlign = 'top';
+          contentContainer.style.width = '100%';
+          
+          const textSpan = document.createElement('span');
+          textSpan.className = 'item-text-content';
+          let fullText = it.text || '';
+          if (it.notes && it.notes.text) fullText += '\n\n' + it.notes.text;
+          
+          // Use basic parse for the preview
+          textSpan.innerHTML = typeof parseMarkdownLine !== 'undefined' ? parseMarkdownLine(fullText) : fullText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          
+          contentContainer.appendChild(textSpan);
+          
+          if (fullText.length > 150 || fullText.includes('\n')) {
+            const badge = document.createElement('span');
+            badge.className = 'read-more-badge';
+            badge.textContent = 'Read More';
+            badge.onclick = (e) => {
+              e.stopPropagation();
+              if (window.App && window.App.openMarkdownModal) {
+                window.App.openMarkdownModal(it);
+              }
+            };
+            contentContainer.appendChild(badge);
+          }
+          
+          li.appendChild(contentContainer);
           ul.appendChild(li);
         });
         td.appendChild(ul);
