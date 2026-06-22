@@ -66,9 +66,9 @@ window.openViewManager = function() {
   const btnCreateView = document.getElementById('btn-create-view');
   
   if (newViewSectionSelect) {
-    newViewSectionSelect.innerHTML = '<option value="">No Sections (Flat)</option>';
+    newViewSectionSelect.innerHTML = '<option value="" disabled selected>Select Group By...</option><option value="flat">No Sections (Flat)</option>';
     if (newViewColSectionSelect) {
-      newViewColSectionSelect.innerHTML = '<option value="">Select Column Axis...</option>';
+      newViewColSectionSelect.innerHTML = '<option value="" disabled selected>Select Column Axis...</option>';
     }
     
     // Find all root categories and populate dropdown
@@ -120,8 +120,8 @@ window.openViewManager = function() {
       const activeView = availableViews[activeViewIndex];
       if (activeView) {
         activeView.layout = layout;
-        activeView.sectionCategoryId = sectionCatId;
-        activeView.columnCategoryId = colSectionCatId;
+        if (sectionCatId) activeView.sectionCategoryId = sectionCatId === 'flat' ? null : sectionCatId;
+        if (colSectionCatId) activeView.columnCategoryId = colSectionCatId;
         renderList();
         selectActiveView();
         closeModal();
@@ -129,7 +129,14 @@ window.openViewManager = function() {
       return;
     }
     
-    const newView = window.App.db.addView(name, sectionCatId, false, layout, colSectionCatId);
+    // VALIDATION: User typed a name, so they are creating a new view.
+    if (!sectionCatId) {
+      alert("Please select a 'Group By' category or 'No Sections (Flat)' from the dropdown before pressing Apply/Add.");
+      return;
+    }
+    
+    const actualSectionCatId = sectionCatId === 'flat' ? null : sectionCatId;
+    const newView = window.App.db.addView(name, actualSectionCatId, false, layout, colSectionCatId);
     
     // Select the new view automatically
     activeViewIndex = availableViews.length - 1;
